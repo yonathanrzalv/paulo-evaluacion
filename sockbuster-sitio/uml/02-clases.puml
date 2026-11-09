@@ -1,0 +1,158 @@
+@startuml
+title Sockbuster - Vista Logica (Diagrama de Clases)
+
+skinparam backgroundColor White
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam nodesep 40
+skinparam ranksep 50
+skinparam ArrowColor #555555
+skinparam class {
+  BackgroundColor #EFEFEF
+  BorderColor #555555
+}
+
+abstract class Usuario {
+  - id : int
+  - nombre : String
+  - email : String
+  - passwordHash : String
+  --
+  + iniciarSesion() : TokenJWT
+}
+
+class Cliente {
+  - direccion : String
+  --
+  + publicarResena() : Resena
+}
+
+class Administrador {
+  - nivelAcceso : int
+  --
+  + registrarProducto() : Producto
+  + actualizarStock() : void
+  + modificarPrecio() : void
+}
+
+class TokenJWT {
+  - token : String
+  - expiracion : DateTime
+  - rol : Rol
+  --
+  + esValido() : boolean
+}
+
+enum Rol {
+  CLIENTE
+  ADMIN
+}
+
+class Categoria {
+  - id : int
+  - nombre : String
+}
+
+class Tematica {
+  - id : int
+  - titulo : String
+  - tipo : TipoObra
+  - anio : int
+}
+
+enum TipoObra {
+  PELICULA
+  SERIE
+}
+
+class Producto {
+  - id : int
+  - nombre : String
+  - descripcion : String
+  - fotoUrl : String
+  - precio : int
+  --
+  + calificacionPromedio() : double
+}
+
+class Variante {
+  - talla : Talla
+  - stock : int
+  --
+  + hayStock() : boolean
+  + descontar() : boolean
+}
+
+enum Talla {
+  S
+  M
+  L
+  XL
+}
+
+class Resena {
+  - id : int
+  - estrellas : int
+  - comentario : String
+  - fecha : DateTime
+}
+
+class Carrito {
+  - id : int
+  --
+  + agregar() : void
+  + modificarCantidad() : void
+  + calcularTotal() : int
+}
+
+class ItemCarrito {
+  - cantidad : int
+  --
+  + subtotal() : int
+}
+
+class Pedido {
+  - id : int
+  - codigo : String
+  - fecha : DateTime
+  - total : int
+  - estado : EstadoPedido
+  --
+  + generarResumen() : String
+}
+
+class DetallePedido {
+  - cantidad : int
+  - precioUnitario : int
+  --
+  + subtotal() : int
+}
+
+enum EstadoPedido {
+  PENDIENTE
+  PAGADO
+  CANCELADO
+}
+
+Usuario <|-- Cliente
+Usuario <|-- Administrador
+Usuario "1" --> "0..*" TokenJWT
+TokenJWT "0..*" --> "1" Rol
+
+Categoria "1" o-- "0..*" Tematica
+Tematica "1" o-- "0..*" Producto
+Tematica "0..*" --> "1" TipoObra
+Producto "1" *-- "1..*" Variante
+Variante "0..*" --> "1" Talla
+Producto "1" *-- "0..*" Resena
+Cliente "1" --> "0..*" Resena
+Administrador "1" --> "0..*" Producto
+
+Cliente "1" *-- "0..1" Carrito
+Carrito "1" *-- "0..*" ItemCarrito
+ItemCarrito "0..*" o-- "1" Variante
+Cliente "1" --> "0..*" Pedido
+Pedido "1" *-- "1..*" DetallePedido
+DetallePedido "0..*" o-- "1" Variante
+Pedido "0..*" --> "1" EstadoPedido
+@enduml

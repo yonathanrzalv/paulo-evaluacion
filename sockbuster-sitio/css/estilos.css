@@ -1,0 +1,318 @@
+/* Sockbuster Video & Socks — hoja de estilos compartida
+   Paleta: videoclub nocturno (azul noche, ámbar de marquesina, rojo cinta) */
+
+:root{
+  --noche:#101018;
+  --panel:#1A1A26;
+  --panel-alto:#232334;
+  --linea:#32324A;
+  --marquesina:#F5B700;
+  --cinta:#E23E57;
+  --menta:#4ECDA4;
+  --texto:#F0ECE2;
+  --texto-suave:#A5A2B8;
+  --radio:6px;
+  --display:"Anton","Arial Narrow",Impact,sans-serif;
+  --cuerpo:"Barlow","Helvetica Neue",Arial,sans-serif;
+}
+
+*{box-sizing:border-box}
+
+/* Las reglas display:grid de más abajo pisarían el atributo hidden,
+   que tiene la misma especificidad. Esto lo deja siempre por encima. */
+[hidden]{display:none !important}
+
+body{
+  margin:0;
+  background:var(--noche);
+  color:var(--texto);
+  font-family:var(--cuerpo);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3{
+  font-family:var(--display);
+  font-weight:400;
+  letter-spacing:.02em;
+  line-height:1.05;
+  text-transform:uppercase;
+  margin:0;
+}
+
+a{color:var(--marquesina)}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--marquesina);outline-offset:3px}
+
+.contenedor{max-width:1100px;margin:0 auto;padding-inline:20px}
+
+/* ---------- cabecera y pestañas ---------- */
+.cabecera{
+  border-bottom:1px solid var(--linea);
+  background:var(--panel);
+  position:sticky;top:0;z-index:50;
+}
+.cabecera-fila{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  padding-block:14px;
+}
+.marca{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--texto)}
+.marca-logo{
+  width:34px;height:34px;border-radius:var(--radio);
+  background:var(--marquesina);color:var(--noche);
+  display:grid;place-items:center;
+  font-family:var(--display);font-size:20px;
+}
+.marca-nombre{font-family:var(--display);font-size:22px;letter-spacing:.03em}
+.marca-nombre span{color:var(--marquesina)}
+
+.pestanas{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.pestana{
+  display:block;padding:9px 18px;
+  border:1px solid var(--linea);border-bottom:none;
+  border-radius:var(--radio) var(--radio) 0 0;
+  background:transparent;color:var(--texto-suave);
+  text-decoration:none;font-weight:500;font-size:15px;
+  position:relative;top:1px;
+}
+.pestana:hover{color:var(--texto);background:var(--panel-alto)}
+.pestana[aria-current="page"]{
+  background:var(--noche);color:var(--marquesina);
+  border-color:var(--linea);
+  border-bottom:1px solid var(--noche);
+}
+
+/* ---------- portada ---------- */
+.banner{
+  border-bottom:1px solid var(--linea);
+  background:
+    repeating-linear-gradient(90deg,transparent 0 38px,rgba(245,183,0,.05) 38px 40px),
+    var(--panel);
+  padding-block:60px 54px;
+}
+.banner h1{font-size:clamp(40px,8vw,88px);max-width:14ch}
+.banner h1 em{font-style:normal;color:var(--marquesina)}
+.banner p{max-width:50ch;color:var(--texto-suave);font-size:18px;margin:18px 0 0}
+.cintillo{
+  display:inline-block;background:var(--cinta);color:#fff;
+  font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;margin-bottom:18px;
+}
+.botones{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.boton{
+  display:inline-block;padding:13px 26px;border-radius:var(--radio);
+  background:var(--marquesina);color:var(--noche);
+  text-decoration:none;font-weight:600;border:0;
+}
+.boton.hueco{background:transparent;color:var(--texto);border:1px solid var(--linea)}
+
+section{padding-block:48px}
+.titulo-seccion{
+  font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--marquesina);font-family:var(--cuerpo);font-weight:600;
+  margin-bottom:14px;
+}
+
+/* ---------- rejillas genéricas ---------- */
+.rejilla{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.tarjeta{
+  background:var(--panel);border:1px solid var(--linea);
+  border-radius:var(--radio);padding:22px;
+}
+.tarjeta h3{font-size:19px;margin-bottom:8px}
+.tarjeta p{color:var(--texto-suave);margin:0;font-size:15px}
+
+/* ---------- equipo ---------- */
+.equipo{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.integrante{
+  background:var(--panel);border:1px solid var(--linea);
+  border-left:3px solid var(--marquesina);
+  border-radius:0 var(--radio) var(--radio) 0;padding:16px 18px;
+}
+.integrante strong{display:block;font-size:17px}
+.integrante span{color:var(--texto-suave);font-size:14px}
+
+/* ---------- catálogo ---------- */
+.filtros{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding-block:4px 26px}
+.filtro-eti{
+  font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--texto-suave);margin-right:6px;
+}
+.filtro{
+  background:transparent;border:1px solid var(--linea);color:var(--texto-suave);
+  padding:8px 16px;border-radius:999px;font-size:14px;
+}
+.filtro:hover{color:var(--texto);border-color:var(--texto-suave)}
+.filtro[aria-pressed="true"]{
+  background:var(--marquesina);border-color:var(--marquesina);
+  color:var(--noche);font-weight:600;
+}
+
+.productos{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(235px,1fr))}
+.producto{
+  background:var(--panel);border:1px solid var(--linea);
+  border-radius:var(--radio);display:flex;flex-direction:column;overflow:hidden;
+}
+.producto-foto{
+  aspect-ratio:1/1;background:var(--panel-alto);
+  display:grid;place-items:center;padding:16px;position:relative;
+}
+.producto-foto svg{width:100%;height:100%}
+.sello{
+  position:absolute;top:10px;left:10px;background:var(--cinta);color:#fff;
+  font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border-radius:999px;
+}
+.producto-cuerpo{padding:0 16px 16px;display:flex;flex-direction:column;gap:9px;flex:1}
+.producto-col{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--menta);font-weight:600}
+.producto h3{font-size:18px}
+.producto-peli{color:var(--texto-suave);font-size:13px;margin:0;font-style:italic}
+.estrellas{color:var(--marquesina);font-size:13px;letter-spacing:.08em}
+.estrellas small{color:var(--texto-suave);font-style:normal;letter-spacing:0;margin-left:5px}
+.tallas{display:flex;gap:6px;flex-wrap:wrap}
+.talla{
+  border:1px solid var(--linea);background:transparent;color:var(--texto);
+  min-width:38px;padding:6px 0;border-radius:4px;font-size:13px;
+}
+.talla[aria-pressed="true"]{background:var(--menta);border-color:var(--menta);color:var(--noche);font-weight:700}
+.talla:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+.stock{font-size:12px;color:var(--texto-suave)}
+.stock.poco{color:var(--cinta)}
+.producto-pie{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:6px}
+.precio{font-family:var(--display);font-size:21px;color:var(--marquesina)}
+.anadir{background:var(--marquesina);color:var(--noche);border:0;padding:9px 15px;border-radius:var(--radio);font-weight:600;font-size:14px}
+.anadir:active{transform:translateY(1px)}
+.ver-mas{
+  background:transparent;border:1px solid var(--linea);color:var(--texto-suave);
+  width:100%;padding:7px;border-radius:4px;font-size:13px;
+}
+.ver-mas:hover{color:var(--texto)}
+
+/* ---------- panel del carrito ---------- */
+.velo{position:fixed;inset:0;background:#000A;z-index:60;opacity:0;pointer-events:none;transition:opacity .2s}
+.velo.abierto{opacity:1;pointer-events:auto}
+.panel{
+  position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:70;
+  background:var(--panel);border-left:1px solid var(--linea);
+  display:flex;flex-direction:column;transform:translateX(102%);transition:transform .25s ease;
+}
+.panel.abierto{transform:none}
+.panel-cab{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--linea)}
+.panel-cab h2{font-size:19px;flex:1}
+.cerrar{background:transparent;border:0;color:var(--texto-suave);font-size:26px;line-height:1;padding:0 4px}
+.lineas{flex:1;overflow-y:auto;padding:14px 20px;display:flex;flex-direction:column;gap:14px}
+.linea{display:grid;grid-template-columns:50px 1fr auto;gap:12px;align-items:center}
+.linea svg{width:50px;height:50px}
+.linea-nom{font-weight:600;font-size:14px;line-height:1.3}
+.linea-det{font-size:12px;color:var(--texto-suave)}
+.cantidad{display:flex;align-items:center;gap:5px;margin-top:5px}
+.cantidad button{width:24px;height:24px;border:1px solid var(--linea);background:transparent;color:var(--texto);border-radius:4px;line-height:1}
+.cantidad span{min-width:22px;text-align:center;font-size:13px}
+.linea-sub{font-weight:600;font-size:14px;text-align:right;color:var(--marquesina)}
+.vacio{text-align:center;color:var(--texto-suave);padding:50px 10px;font-size:14px}
+.totales{border-top:1px solid var(--linea);padding:16px 20px;display:grid;gap:7px}
+.fila{display:flex;justify-content:space-between;font-size:14px;color:var(--texto-suave)}
+.fila.total{color:var(--texto);font-family:var(--display);font-size:22px;padding-top:8px;border-top:1px solid var(--linea);margin-top:4px}
+.fila.total span:last-child{color:var(--marquesina)}
+.pagar{width:100%;background:var(--marquesina);color:var(--noche);border:0;padding:14px;border-radius:var(--radio);font-weight:700;font-size:15px;margin-top:10px}
+.formulario{padding:18px 20px;display:grid;gap:12px;overflow-y:auto}
+.campo{display:grid;gap:5px}
+.campo label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--texto-suave)}
+.campo input,.campo select{
+  background:var(--noche);border:1px solid var(--linea);color:var(--texto);
+  padding:10px 12px;border-radius:4px;font:inherit;font-size:14px;width:100%;
+}
+.listo{text-align:center;padding:48px 24px;display:grid;gap:12px;place-items:center}
+.listo-marca{width:56px;height:56px;border-radius:999px;background:var(--menta);color:var(--noche);display:grid;place-items:center;font-size:28px}
+.listo code{background:var(--noche);border:1px solid var(--linea);padding:5px 12px;border-radius:4px;font-size:14px;color:var(--marquesina)}
+
+.insignia{
+  background:var(--cinta);color:#fff;min-width:21px;height:21px;border-radius:999px;
+  display:inline-grid;place-items:center;font-size:12px;font-weight:700;padding:0 6px;
+}
+.btn-carrito{
+  display:flex;align-items:center;gap:8px;background:var(--panel-alto);
+  border:1px solid var(--linea);color:var(--texto);
+  padding:8px 15px;border-radius:999px;font-weight:600;font-size:14px;
+}
+
+/* ---------- ficha del producto ---------- */
+.ficha{padding:0 20px 20px;display:grid;gap:14px;overflow-y:auto}
+.ficha-foto{background:var(--panel-alto);border-radius:var(--radio);padding:20px;max-width:200px;margin:0 auto;flex-shrink:0}
+.ficha-foto svg{width:100%;height:auto;display:block}
+.resena{border-left:2px solid var(--linea);padding-left:12px}
+.resena-cab{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.resena-aut{font-weight:600;font-size:14px}
+.resena p{margin:4px 0 0;font-size:14px;color:var(--texto-suave)}
+.sel-estrellas{display:flex;gap:4px}
+.sel-estrellas button{background:transparent;border:0;color:var(--linea);font-size:26px;padding:0;line-height:1}
+.sel-estrellas button.activa{color:var(--marquesina)}
+
+/* ---------- página de arquitectura ---------- */
+.aviso{
+  background:var(--panel);border:1px solid var(--linea);
+  border-left:3px solid var(--menta);border-radius:0 var(--radio) var(--radio) 0;
+  padding:18px 20px;margin-bottom:32px;
+}
+.aviso p{margin:0;color:var(--texto-suave);font-size:15px}
+
+.requisitos{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin-bottom:12px}
+.req{background:var(--panel);border:1px solid var(--linea);border-radius:var(--radio);padding:16px 18px}
+.req-cod{
+  font-family:var(--display);font-size:15px;color:var(--marquesina);
+  letter-spacing:.06em;display:block;margin-bottom:4px;
+}
+.req p{margin:0;font-size:14.5px;color:var(--texto-suave)}
+.req.nf{border-left:3px solid var(--cinta)}
+.req.nf .req-cod{color:var(--cinta)}
+
+.vista{
+  border-top:1px solid var(--linea);
+  padding-block:38px;
+}
+.vista-num{
+  font-family:var(--display);font-size:13px;letter-spacing:.2em;
+  color:var(--texto-suave);display:block;margin-bottom:6px;
+}
+.vista h2{font-size:30px;margin-bottom:6px}
+.vista h2 em{font-style:normal;color:var(--marquesina)}
+.vista-tipo{
+  display:inline-block;background:var(--panel-alto);border:1px solid var(--linea);
+  color:var(--menta);font-size:12px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;padding:4px 11px;border-radius:999px;margin-bottom:16px;
+}
+.vista-texto{max-width:68ch;color:var(--texto-suave);margin:0 0 20px}
+.vista-texto strong{color:var(--texto);font-weight:600}
+.lienzo{
+  background:#fff;border:1px solid var(--linea);border-radius:var(--radio);
+  padding:18px;overflow-x:auto;
+}
+.lienzo img{margin:0 auto}
+.pie-figura{font-size:13px;color:var(--texto-suave);margin:10px 0 0;text-align:center}
+.cubre{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:16px;
+}
+.etiqueta-req{
+  background:var(--panel-alto);border:1px solid var(--linea);
+  color:var(--texto-suave);font-size:12px;padding:4px 10px;border-radius:4px;
+}
+
+/* ---------- pie ---------- */
+footer{
+  border-top:1px solid var(--linea);background:var(--panel);
+  padding-block:28px 36px;margin-top:40px;
+  font-size:14px;color:var(--texto-suave);
+}
+.pie-fila{display:flex;flex-wrap:wrap;gap:10px 28px;justify-content:space-between}
+
+@media (max-width:720px){
+  .pestanas{margin-left:0;width:100%}
+  .pestana{flex:1;text-align:center;padding:9px 10px;font-size:14px}
+  .productos{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+  .producto-cuerpo{padding:0 12px 12px}
+  .producto-peli{display:none}
+  .vista h2{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}

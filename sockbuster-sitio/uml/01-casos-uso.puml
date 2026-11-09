@@ -1,0 +1,58 @@
+@startuml
+title Sockbuster - Vista de Escenarios (Casos de Uso)
+
+left to right direction
+skinparam backgroundColor White
+skinparam shadowing false
+skinparam monochrome false
+skinparam usecase {
+  BackgroundColor #EFEFEF
+  BorderColor #555555
+}
+skinparam actor {
+  BackgroundColor #FFFFFF
+  BorderColor #555555
+}
+skinparam ArrowColor #555555
+skinparam packageStyle rectangle
+
+actor "Visitante" as VIS
+actor "Cliente" as CLI
+actor "Administrador" as ADM
+
+CLI --|> VIS
+ADM --|> VIS
+
+rectangle "Plataforma Sockbuster" {
+  usecase "Explorar catalogo" as UC1
+  usecase "Ver ficha\nde producto" as UC2
+  usecase "Agregar al carrito" as UC3
+  usecase "Realizar checkout" as UC4
+  usecase "Publicar resena" as UC5
+  usecase "Registrar calcetin" as UC6
+  usecase "Actualizar stock" as UC7
+  usecase "Modificar precios" as UC8
+
+  usecase "Filtrar por\ncategoria" as UC9
+  usecase "Modificar\ncantidades" as UC10
+  usecase "Generar resumen\ndel pedido" as UC11
+  usecase "Iniciar sesion" as UC12
+}
+
+VIS -- UC1
+VIS -- UC2
+VIS -- UC3
+VIS -- UC4
+CLI -- UC5
+ADM -- UC6
+ADM -- UC7
+ADM -- UC8
+
+UC1 <.. UC9 : <<extend>>
+UC3 <.. UC10 : <<extend>>
+UC4 ..> UC11 : <<include>>
+UC5 ..> UC12 : <<include>>
+UC6 ..> UC12 : <<include>>
+UC7 ..> UC12 : <<include>>
+UC8 ..> UC12 : <<include>>
+@enduml

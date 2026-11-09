@@ -1,0 +1,52 @@
+@startuml
+title Sockbuster - Vista de Procesos (Secuencia: Checkout)
+
+skinparam backgroundColor White
+skinparam shadowing false
+skinparam ArrowColor #555555
+skinparam sequence {
+  ParticipantBackgroundColor #EFEFEF
+  ParticipantBorderColor #555555
+  LifeLineBorderColor #888888
+  ActorBackgroundColor #FFFFFF
+  ActorBorderColor #555555
+}
+autonumber
+
+actor Cliente as C
+participant "Frontend Web" as UI
+participant "API Gateway" as GW
+participant "Servicio\nPedidos" as PED
+participant "Servicio\nInventario" as INV
+participant "Pasarela\nde Pago" as PAGO
+database "Base de Datos" as BD
+
+C -> UI : clic en "Finalizar compra"
+UI -> GW : POST /pedidos (carrito, JWT)
+GW -> PED : crearPedido(carrito)
+PED -> INV : verificarStock(items)
+INV -> BD : SELECT stock
+BD --> INV : stock disponible
+INV --> PED : resultado
+
+alt stock suficiente
+
+  PED -> PAGO : procesarPago(total)
+  PAGO --> PED : pago aprobado
+
+  PED -> INV : descontarStock(items)
+  INV -> BD : UPDATE stock
+  PED -> BD : INSERT pedido (codigo unico)
+
+  PED --> GW : 201 Created + resumen
+  GW --> UI : resumen del pedido
+  UI --> C : muestra el codigo del pedido
+
+else stock insuficiente
+
+  PED --> GW : 409 Conflict
+  GW --> UI : error de stock
+  UI --> C : "Producto sin stock"
+
+end
+@enduml

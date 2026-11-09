@@ -1,0 +1,54 @@
+@startuml
+title Sockbuster - Vista de Desarrollo (Componentes)
+
+skinparam backgroundColor White
+skinparam shadowing false
+skinparam componentStyle rectangle
+skinparam ArrowColor #555555
+skinparam packageStyle rectangle
+skinparam component {
+  BackgroundColor #EFEFEF
+  BorderColor #555555
+}
+
+package "Frontend" {
+  component "Modulo Catalogo" as UICAT
+  component "Modulo Carrito" as UICAR
+  component "Modulo Resenas" as UIRES
+  component "Panel Admin" as UIADM
+  component "Cliente HTTP (JWT)" as HTTP
+}
+
+package "Backend (API REST)" {
+  component "API Gateway" as GW
+  component "Servicio\nAutenticacion" as SAUT
+  component "Servicio\nCatalogo" as SCAT
+  component "Servicio\nPedidos" as SPED
+  component "Servicio\nInventario" as SINV
+  component "Servicio\nResenas" as SRES
+  component "Acceso a Datos" as ORM
+}
+
+database "Base de Datos" as BD
+
+UICAT --> HTTP
+UICAR --> HTTP
+UIRES --> HTTP
+UIADM --> HTTP
+
+HTTP --> GW : HTTPS / JSON
+
+GW --> SAUT
+GW --> SCAT : RF01
+GW --> SPED : RF02
+GW --> SINV : RF03
+GW --> SRES : RF04
+
+SAUT --> ORM
+SCAT --> ORM
+SPED --> ORM
+SRES --> ORM
+SINV --> ORM
+
+ORM --> BD
+@enduml

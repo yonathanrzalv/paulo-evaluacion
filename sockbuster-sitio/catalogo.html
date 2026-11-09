@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catálogo · Sockbuster Video &amp; Socks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="contenedor cabecera-fila">
+    <a class="marca" href="index.html">
+      <span class="marca-logo">S</span>
+      <span class="marca-nombre">Sock<span>buster</span></span>
+    </a>
+    <nav class="pestanas" aria-label="Navegación principal">
+      <a class="pestana" href="index.html">Inicio</a>
+      <a class="pestana" href="catalogo.html" aria-current="page">Catálogo</a>
+      <a class="pestana" href="diagramas.html">Arquitectura</a>
+    </nav>
+    <button class="btn-carrito" id="abrir-carrito" aria-haspopup="dialog">
+      Carrito <span class="insignia" id="contador" aria-live="polite" aria-atomic="true">0</span>
+    </button>
+  </div>
+</header>
+
+<main class="contenedor">
+
+  <section style="padding-block:34px 0">
+    <p class="titulo-seccion">RF01 · Catálogo por colecciones temáticas</p>
+    <h1 style="font-size:clamp(30px,5vw,46px);margin-bottom:10px">El catálogo completo</h1>
+    <p style="color:var(--texto-suave);max-width:58ch;margin:0">
+      Doce modelos repartidos en cuatro colecciones. Cada ficha muestra la película o serie que lo inspira, el precio, el stock por talla y las valoraciones de otros fanáticos.
+    </p>
+  </section>
+
+  <div class="filtros" role="group" aria-label="Filtrar por colección">
+    <span class="filtro-eti">Colección</span>
+    <button class="filtro" data-coleccion="todas" aria-pressed="true">Todas</button>
+    <button class="filtro" data-coleccion="Ciencia Ficción" aria-pressed="false">Ciencia Ficción</button>
+    <button class="filtro" data-coleccion="Terror 80s" aria-pressed="false">Terror 80s</button>
+    <button class="filtro" data-coleccion="Series de Drama" aria-pressed="false">Series de Drama</button>
+    <button class="filtro" data-coleccion="Animación" aria-pressed="false">Animación</button>
+  </div>
+
+  <section class="productos" id="rejilla-productos" style="padding-block:0 50px"></section>
+
+</main>
+
+<footer>
+  <div class="contenedor pie-fila">
+    <span>© 2026 Sockbuster Video &amp; Socks</span>
+    <span>Prototipo académico sin fines comerciales</span>
+    <span>Punta Arenas, Chile</span>
+  </div>
+</footer>
+
+<div class="velo" id="velo"></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-titulo">
+  <div class="panel-cab">
+    <h2 id="panel-titulo">Tu carrito</h2>
+    <button class="cerrar" id="cerrar-panel" aria-label="Cerrar">&times;</button>
+  </div>
+
+  <div class="ficha" id="vista-ficha" hidden></div>
+
+  <div class="lineas" id="vista-carrito"></div>
+
+  <div class="totales" id="totales" hidden>
+    <div class="fila"><span>Subtotal</span><span id="subtotal">$0</span></div>
+    <div class="fila"><span>Despacho</span><span id="despacho">$0</span></div>
+    <div class="fila total"><span>Total</span><span id="total">$0</span></div>
+    <button class="pagar" id="ir-a-pagar">Finalizar compra</button>
+  </div>
+
+  <form class="formulario" id="vista-formulario" hidden>
+    <div class="campo"><label for="f-nombre">Nombre completo</label><input id="f-nombre" required></div>
+    <div class="campo"><label for="f-correo">Correo</label><input id="f-correo" type="email" required></div>
+    <div class="campo"><label for="f-direccion">Dirección</label><input id="f-direccion" required></div>
+    <div class="campo"><label for="f-ciudad">Ciudad</label><input id="f-ciudad" value="Punta Arenas" required></div>
+    <div class="campo"><label for="f-pago">Medio de pago</label>
+      <select id="f-pago"><option>Débito</option><option>Crédito</option><option>Transferencia</option></select>
+    </div>
+    <button class="pagar" type="submit">Confirmar pedido</button>
+  </form>
+
+  <div class="listo" id="vista-listo" hidden>
+    <div class="listo-marca">&check;</div>
+    <h3 style="font-size:22px">Pedido confirmado</h3>
+    <p style="color:var(--texto-suave);font-size:14px;margin:0">Te enviamos el detalle al correo. Entrega estimada en 48 horas hábiles.</p>
+    <code id="folio"></code>
+    <button class="ver-mas" id="seguir" style="max-width:220px">Seguir comprando</button>
+  </div>
+</aside>
+
+<script src="js/datos.js"></script>
+<script src="js/catalogo.js"></script>
+<script src="js/resenas.js"></script>
+<script src="js/carrito.js"></script>
+</body>
+</html>

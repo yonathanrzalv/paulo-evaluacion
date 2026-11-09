@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arquitectura 4+1 · Sockbuster Video &amp; Socks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="contenedor cabecera-fila">
+    <a class="marca" href="index.html">
+      <span class="marca-logo">S</span>
+      <span class="marca-nombre">Sock<span>buster</span></span>
+    </a>
+    <nav class="pestanas" aria-label="Navegación principal">
+      <a class="pestana" href="index.html">Inicio</a>
+      <a class="pestana" href="catalogo.html">Catálogo</a>
+      <a class="pestana" href="diagramas.html" aria-current="page">Arquitectura</a>
+    </nav>
+  </div>
+</header>
+
+<main class="contenedor">
+
+  <section style="padding-block:38px 20px">
+    <p class="titulo-seccion">Documentación técnica</p>
+    <h1 style="font-size:clamp(30px,5vw,48px);margin-bottom:12px">Arquitectura bajo el paradigma 4+1</h1>
+    <p style="color:var(--texto-suave);max-width:66ch;margin:0 0 28px">
+      El modelo de vistas 4+1 de Philippe Kruchten describe un sistema desde cinco perspectivas complementarias. Cada una responde a una pregunta distinta y se dirige a un interlocutor distinto, de modo que ninguna por sí sola alcanza a describir la solución completa.
+    </p>
+
+    <div class="aviso">
+      <p>La documentación que sigue modela la arquitectura objetivo de Sockbuster: una plataforma de comercio electrónico con una interfaz web, una API REST con servicios separados por responsabilidad y una base de datos relacional. El prototipo navegable de este sitio implementa la capa de interfaz —catálogo, carrito, checkout y reseñas—, mientras que los servicios del backend quedan modelados en las cinco vistas como la solución escalable que pide el caso de estudio.</p>
+    </div>
+  </section>
+
+  <section style="padding-block:0 10px">
+    <p class="titulo-seccion">Requerimientos funcionales</p>
+    <div class="requisitos">
+      <article class="req">
+        <span class="req-cod">RF01 · Catálogo por colecciones temáticas</span>
+        <p>El sistema permite explorar y filtrar el catálogo por categoría (Ciencia Ficción, Terror 80s, Series de Drama, Animación), mostrando foto, precio, stock y tallas disponibles de cada modelo.</p>
+      </article>
+      <article class="req">
+        <span class="req-cod">RF02 · Carrito y gestión de pedidos</span>
+        <p>El cliente agrega productos al carrito, modifica las cantidades y simula la verificación de pago, obteniendo un resumen del pedido con su identificador único.</p>
+      </article>
+      <article class="req">
+        <span class="req-cod">RF03 · Administración de inventario</span>
+        <p>El administrador registra nuevos modelos, los asocia a una película o serie, actualiza el stock y modifica los precios.</p>
+      </article>
+      <article class="req">
+        <span class="req-cod">RF04 · Reseñas de fanáticos</span>
+        <p>Los usuarios registrados publican valoraciones de 1 a 5 estrellas y comentarios en la ficha de cada producto.</p>
+      </article>
+    </div>
+
+    <p class="titulo-seccion" style="margin-top:28px">Requerimientos no funcionales</p>
+    <div class="requisitos">
+      <article class="req nf">
+        <span class="req-cod">RNF01 · Disponibilidad y despliegue en la nube</span>
+        <p>La interfaz pública está disponible en línea con una carga inicial bajo los 2 segundos, alojada en un entorno de hosting accesible vía web.</p>
+      </article>
+      <article class="req nf">
+        <span class="req-cod">RNF02 · Seguridad en acceso y autenticación</span>
+        <p>La comunicación entre la interfaz y los servicios se realiza sobre HTTPS, y las funciones administrativas exigen autenticación mediante tokens JWT.</p>
+      </article>
+    </div>
+
+    <p style="color:var(--texto-suave);font-size:14.5px;max-width:66ch;margin-top:22px">
+      Alcance del prototipo: RF01, RF02 y RF04 son operables en la página de catálogo. RF03 queda modelado en las cinco vistas, pero su panel de administración no forma parte de las tres páginas solicitadas en el entregable. Los dos requerimientos no funcionales se sostienen en la vista física, donde se especifican el entorno de alojamiento y los mecanismos de seguridad.
+    </p>
+  </section>
+
+  <article class="vista">
+    <span class="vista-num">Vista 1 de 5</span>
+    <h2>Vista <em>Lógica</em></h2>
+    <span class="vista-tipo">Diagrama de clases</span>
+    <p class="vista-texto">
+      Responde a <strong>qué entidades existen en el dominio y cómo se relacionan</strong>. Es la vista que interesa al usuario final y al analista, porque describe la funcionalidad del sistema en términos del negocio y no de la tecnología.
+    </p>
+    <p class="vista-texto">
+      <code>Usuario</code> es una clase abstracta de la que especializan <code>Cliente</code> y <code>Administrador</code>, lo que evita duplicar los atributos de identidad y permite que cada rol agregue solo sus operaciones propias. De <code>Usuario</code> cuelga <code>TokenJWT</code>, que materializa el mecanismo de autenticación exigido por RNF02 y lleva el <code>Rol</code> con que se emitió.
+    </p>
+    <p class="vista-texto">
+      Tres decisiones de modelado merecen defenderse. La primera es <code>Variante</code>: el stock no es un atributo de <code>Producto</code> sino una clase aparte, porque depende de la talla, y un mismo modelo puede estar agotado en S y disponible en L. La segunda es <code>DetallePedido</code>, que guarda su propio <code>precioUnitario</code> en lugar de leerlo del producto: así el pedido conserva el precio del día de la compra aunque el producto suba después. La tercera es la cadena <code>Categoria → Tematica → Producto</code>, que separa la categoría comercial de la obra que inspira el diseño, tal como pide RF03 al exigir asociar cada modelo a una película o serie.
+    </p>
+    <p class="vista-texto">
+      Las composiciones marcan las entidades cuyo ciclo de vida depende del todo (un <code>ItemCarrito</code> no existe fuera de su <code>Carrito</code>), mientras que las agregaciones marcan las que sobreviven por su cuenta (una <code>Variante</code> sigue en el catálogo aunque se borre la línea de pedido que la referencia).
+    </p>
+    <div class="lienzo"><img src="img/02-clases.png" alt="Diagrama de clases con Usuario, Cliente, Administrador, TokenJWT, Categoria, Tematica, Producto, Variante, Resena, Carrito, ItemCarrito, Pedido y DetallePedido, con sus multiplicidades"></div>
+    <p class="pie-figura">Figura 1 · Diagrama de clases del dominio</p>
+    <div class="cubre">
+      <span class="etiqueta-req">Modela RF01</span>
+      <span class="etiqueta-req">Modela RF02</span>
+      <span class="etiqueta-req">Modela RF03</span>
+      <span class="etiqueta-req">Modela RF04</span>
+    </div>
+  </article>
+
+  <article class="vista">
+    <span class="vista-num">Vista 2 de 5</span>
+    <h2>Vista de <em>Desarrollo</em></h2>
+    <span class="vista-tipo">Diagrama de componentes</span>
+    <p class="vista-texto">
+      Responde a <strong>cómo está organizado el código fuente</strong>. Se dirige al equipo de programación y a quien tenga que mantener el sistema después.
+    </p>
+    <p class="vista-texto">
+      El sistema se divide en dos bloques. El frontend agrupa un módulo de interfaz por requerimiento funcional —catálogo, carrito y checkout, panel de administración y reseñas— que no hablan directamente con la red: todos pasan por un <strong>cliente HTTP único</strong> que centraliza el manejo del token JWT, de modo que la lógica de autenticación no se repite en cada módulo.
+    </p>
+    <p class="vista-texto">
+      El backend expone una API REST detrás de un <strong>API Gateway</strong> que valida el token antes de enrutar. Cada requerimiento funcional tiene su servicio: catálogo para RF01, pedidos para RF02, inventario para RF03 y reseñas para RF04, más el de autenticación que los atraviesa a todos. Ningún servicio consulta la base de datos por su cuenta: todos pasan por una capa de acceso a datos común, lo que concentra en un solo punto las consultas y las transacciones.
+    </p>
+    <div class="lienzo"><img src="img/04-componentes.png" alt="Diagrama de componentes con el frontend por módulos, el API Gateway, los cinco servicios del backend, la capa de acceso a datos, la base de datos y los servicios externos"></div>
+    <p class="pie-figura">Figura 2 · Diagrama de componentes del prototipo</p>
+    <div class="cubre">
+      <span class="etiqueta-req">Implementa RF01</span>
+      <span class="etiqueta-req">Implementa RF02</span>
+      <span class="etiqueta-req">Implementa RF03</span>
+      <span class="etiqueta-req">Implementa RF04</span>
+      <span class="etiqueta-req">Sostiene RNF02</span>
+    </div>
+  </article>
+
+  <article class="vista">
+    <span class="vista-num">Vista 3 de 5</span>
+    <h2>Vista de <em>Procesos</em></h2>
+    <span class="vista-tipo">Diagrama de secuencia</span>
+    <p class="vista-texto">
+      Responde a <strong>qué ocurre en el tiempo cuando el sistema está corriendo</strong>: el orden de las interacciones, la sincronización y los caminos alternativos. Se dirige al integrador del sistema.
+    </p>
+    <p class="vista-texto">
+      El diagrama recorre el checkout de RF02 completo, desde el clic en «Finalizar compra» hasta el código del pedido. El sistema verifica el stock contra la base de datos antes de cobrar, de modo que un pedido sin existencias se corta sin llegar nunca a la pasarela de pago.
+    </p>
+    <p class="vista-texto">
+      El orden de los últimos mensajes no es decorativo: <strong>el stock se descuenta después de que la pasarela aprueba el pago</strong>, nunca antes. Invertir esos dos pasos dejaría unidades reservadas por pagos que terminaron fallando, un error frecuente en sistemas de comercio electrónico. El fragmento alternativo cubre las dos salidas posibles: 201 cuando el pedido queda creado y 409 cuando falta stock.
+    </p>
+    <div class="lienzo"><img src="img/03-secuencia.png" alt="Diagrama de secuencia del checkout con el fragmento alternativo entre stock suficiente e insuficiente"></div>
+    <p class="pie-figura">Figura 3 · Secuencia del checkout</p>
+    <div class="cubre">
+      <span class="etiqueta-req">Detalla RF02</span>
+      <span class="etiqueta-req">Sostiene RNF02</span>
+    </div>
+  </article>
+
+  <article class="vista">
+    <span class="vista-num">Vista 4 de 5</span>
+    <h2>Vista <em>Física</em></h2>
+    <span class="vista-tipo">Diagrama de despliegue</span>
+    <p class="vista-texto">
+      Responde a <strong>dónde se ejecuta cada parte del sistema</strong>: la topología de red, los nodos y los protocolos entre ellos. Se dirige al ingeniero de infraestructura.
+    </p>
+    <p class="vista-texto">
+      Es la vista donde se justifican los dos requerimientos no funcionales. Los archivos estáticos se sirven desde un <strong>servidor web con CDN</strong>, lo que sostiene la carga inicial bajo los 2 segundos que exige RNF01 sin que cada visita golpee el servidor de aplicación.
+    </p>
+    <p class="vista-texto">
+      El servidor de aplicación corre la API REST y es el único que alcanza la base de datos, por conexión privada: la base no se expone a Internet, que es una decisión de seguridad tan importante como el cifrado. Para RNF02, todo el tráfico entre el navegador y los servidores viaja sobre HTTPS, y las llamadas a la API llevan el token JWT.
+    </p>
+    <div class="lienzo"><img src="img/05-despliegue.png" alt="Diagrama de despliegue con el dispositivo del usuario, el servidor web con CDN, el servidor de aplicación y el servidor de base de datos"></div>
+    <p class="pie-figura">Figura 4 · Topología de despliegue</p>
+    <div class="cubre">
+      <span class="etiqueta-req">Sostiene RNF01</span>
+      <span class="etiqueta-req">Sostiene RNF02</span>
+    </div>
+  </article>
+
+  <article class="vista">
+    <span class="vista-num">Vista 5 de 5 · la vista «+1»</span>
+    <h2>Escenarios · <em>Casos de uso</em></h2>
+    <span class="vista-tipo">Diagrama de casos de uso</span>
+    <p class="vista-texto">
+      Responde a <strong>qué puede hacer cada actor con el sistema</strong>. En el paradigma 4+1 esta quinta vista cumple una función especial: no agrega información nueva, sino que <strong>valida y une a las otras cuatro</strong>. Cada escenario debe poder recorrerse a través de las clases de la vista lógica, los componentes de la vista de desarrollo, la secuencia de la vista de procesos y los nodos de la vista física.
+    </p>
+    <p class="vista-texto">
+      Los actores se organizan por generalización: <code>Cliente</code> y <code>Administrador</code> especializan a <code>Visitante</code>, de modo que heredan la navegación del catálogo sin repetirla. Publicar una reseña exige estar registrado, y por eso cuelga del cliente y no del visitante.
+    </p>
+    <p class="vista-texto">
+      Las relaciones <code>include</code> marcan lo que siempre ocurre: todo checkout genera su resumen con código único, y toda operación que modifica datos pasa por el inicio de sesión. Las <code>extend</code> marcan lo opcional: se puede recorrer el catálogo sin filtrar por categoría, y se puede comprar sin modificar las cantidades del carrito. Fíjense en que las flechas apuntan en sentidos contrarios, porque en <code>include</code> va del caso base al incluido y en <code>extend</code> va del caso que extiende hacia el base.
+    </p>
+    <div class="lienzo"><img src="img/01-casos-uso.png" alt="Diagrama de casos de uso con los actores Visitante, Cliente y Administrador, y los casos de uso de los cuatro requerimientos funcionales"></div>
+    <p class="pie-figura">Figura 5 · Casos de uso del sistema</p>
+    <div class="cubre">
+      <span class="etiqueta-req">Valida RF01</span>
+      <span class="etiqueta-req">Valida RF02</span>
+      <span class="etiqueta-req">Valida RF03</span>
+      <span class="etiqueta-req">Valida RF04</span>
+      <span class="etiqueta-req">Valida RNF02</span>
+    </div>
+  </article>
+
+  <section style="border-top:1px solid var(--linea)">
+    <p class="titulo-seccion">Cómo se articulan las cinco vistas</p>
+    <p style="color:var(--texto-suave);max-width:68ch;margin:0">
+      El caso de uso «Realizar checkout» sirve de hilo conductor. Se declara como escenario en la quinta vista, junto con el <code>include</code> que lo obliga a generar un resumen con identificador único. Las entidades que manipula —<code>Carrito</code>, <code>ItemCarrito</code>, <code>Variante</code>, <code>Pedido</code> y <code>DetallePedido</code>— están definidas con sus multiplicidades en la vista lógica. Los componentes que lo ejecutan —el módulo de carrito en el frontend, el API Gateway y los servicios de pedidos e inventario— aparecen en la vista de desarrollo. El orden exacto de sus mensajes, con los tres puntos donde puede fallar, está en la vista de procesos. Y los nodos sobre los que corre, con el protocolo cifrado y el token que lo protege, están en la vista física.
+    </p>
+    <p style="color:var(--texto-suave);max-width:68ch;margin:14px 0 0">
+      Ese recorrido completo es lo que el paradigma 4+1 busca garantizar: que las cuatro vistas describan el mismo sistema y que ninguna contradiga a las otras. La quinta vista no agrega información, sino que obliga a comprobarlo.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="contenedor pie-fila">
+    <span>© 2026 Sockbuster Video &amp; Socks</span>
+    <span>Diagramas generados con PlantUML · Notación UML 2.5</span>
+    <span>Punta Arenas, Chile</span>
+  </div>
+</footer>
+
+</body>
+</html>

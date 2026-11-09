@@ -1,0 +1,46 @@
+@startuml
+title Sockbuster - Vista Fisica (Despliegue)
+
+skinparam backgroundColor White
+skinparam shadowing false
+skinparam ArrowColor #555555
+skinparam node {
+  BackgroundColor #EFEFEF
+  BorderColor #555555
+}
+skinparam artifact {
+  BackgroundColor #FFFFFF
+  BorderColor #777777
+}
+skinparam database {
+  BackgroundColor #FFFFFF
+  BorderColor #555555
+}
+
+node "Dispositivo del Usuario" {
+  node "Navegador Web" {
+    artifact "HTML / CSS / JS"
+  }
+}
+
+node "Servidor Web (CDN)" as CDN {
+  artifact "Sitio estatico"
+}
+
+node "Servidor de Aplicacion" as APP {
+  artifact "API REST + JWT"
+}
+
+node "Servidor de Base de Datos" as DBSRV {
+  database "BD Relacional"
+}
+
+"Navegador Web" --> CDN : HTTPS (carga < 2 s)
+"Navegador Web" --> APP : HTTPS + JWT
+APP --> DBSRV : conexion privada
+
+legend bottom
+  RNF01: el CDN entrega el sitio estatico con una carga inicial menor a 2 segundos.
+  RNF02: todo el trafico viaja por HTTPS y la API exige autenticacion con token JWT.
+endlegend
+@enduml
